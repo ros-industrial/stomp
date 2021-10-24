@@ -12,6 +12,7 @@
 
   <!-- Following recommendations of REP 136 -->
   <buildtool_depend>cmake</buildtool_depend>
+  <build_depend>ros_industrial_cmake_boilerplate</build_depend>
 
   <build_depend>eigen</build_depend>
   <build_export_depend>eigen</build_export_depend>
