@@ -23,14 +23,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#ifndef INDUSTRIAL_MOVEIT_STOMP_CORE_INCLUDE_STOMP_CORE_STOMP_UTILS_H_
-#define INDUSTRIAL_MOVEIT_STOMP_CORE_INCLUDE_STOMP_CORE_STOMP_UTILS_H_
+#ifndef INDUSTRIAL_MOVEIT_STOMP_INCLUDE_STOMP_STOMP_UTILS_H_
+#define INDUSTRIAL_MOVEIT_STOMP_INCLUDE_STOMP_STOMP_UTILS_H_
 
 #include <string>
 #include <vector>
 #include <Eigen/Core>
 
-namespace stomp_core
+namespace stomp
 {
 
 /** @brief The data structure used to store information about a single rollout. */
@@ -178,4 +178,4 @@ std::string toString(const Eigen::MatrixXd& data);
 
 } /* namespace stomp */
 
-#endif /* INDUSTRIAL_MOVEIT_STOMP_CORE_INCLUDE_STOMP_CORE_STOMP_UTILS_H_ */
+#endif /* INDUSTRIAL_MOVEIT_STOMP_INCLUDE_STOMP_STOMP_UTILS_H_ */

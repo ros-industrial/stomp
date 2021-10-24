@@ -1,7 +1,7 @@
 # stomp_ros
 
-[![Build Status: Ubuntu Bionic (Actions)](https://github.com/ros-industrial/stomp_ros/workflows/CI%20-%20Ubuntu%20Bionic/badge.svg?branch=melodic-devel)](https://github.com/ros-industrial/stomp_ros/actions?query=workflow%3A%22CI+-+Ubuntu+Bionic%22)
-[![Build Status: Ubuntu Focal (Actions)](https://github.com/ros-industrial/stomp_ros/workflows/CI%20-%20Ubuntu%20Focal/badge.svg?branch=melodic-devel)](https://github.com/ros-industrial/stomp_ros/actions?query=workflow%3A%22CI+-+Ubuntu+Focal%22)
+[![Build Status: Ubuntu Bionic (Actions)](https://github.com/ros-industrial/stomp/workflows/CI%20-%20Ubuntu%20Bionic/badge.svg?branch=main)](https://github.com/ros-industrial/stomp/actions?query=workflow%3A%22CI+-+Ubuntu+Bionic%22)
+[![Build Status: Ubuntu Focal (Actions)](https://github.com/ros-industrial/stomp/workflows/CI%20-%20Ubuntu%20Focal/badge.svg?branch=main)](https://github.com/ros-industrial/stomp/actions?query=workflow%3A%22CI+-+Ubuntu+Focal%22)
 
 #### Build
 - Build the workspace:
@@ -15,9 +15,9 @@ Cd into the catkin workspace directory and type the following command:
 ```
 catkin run_tests 
 ```
-- Run the stomp_core unit tests:
+- Run the stomp unit tests:
 ```
-catkin run_tests stomp_core
+catkin run_tests stomp
 ```
 
 #### Seeding Stomp

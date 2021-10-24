@@ -26,16 +26,15 @@
 #ifndef STOMP_TASK_H_
 #define STOMP_TASK_H_
 
-#include <XmlRpcValue.h>
-#include <boost/shared_ptr.hpp>
 #include <Eigen/Core>
-#include "stomp_core/utils.h"
+#include <memory>
+#include <stomp/utils.h>
 
-namespace stomp_core
+namespace stomp
 {
 
 class Task;
-typedef std::shared_ptr<Task> TaskPtr; /**< Defines a boost shared ptr for type Task */
+typedef std::shared_ptr<Task> TaskPtr; /**< Defines a shared ptr for type Task */
 
 /** @brief Defines the STOMP improvement policy */
 class Task

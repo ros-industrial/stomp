@@ -25,7 +25,7 @@
  */
 #include <gtest/gtest.h>
 
-/** @brief This executes all tests for the stomp_core package */
+/** @brief This executes all tests for the stomp package */
 int main(int argc, char **argv)
 {
   testing::InitGoogleTest(&argc, argv);

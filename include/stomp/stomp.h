@@ -23,15 +23,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#ifndef INDUSTRIAL_MOVEIT_STOMP_CORE_INCLUDE_STOMP_CORE_STOMP_H_
-#define INDUSTRIAL_MOVEIT_STOMP_CORE_INCLUDE_STOMP_CORE_STOMP_H_
+#ifndef INDUSTRIAL_MOVEIT_STOMP_INCLUDE_STOMP_STOMP_H_
+#define INDUSTRIAL_MOVEIT_STOMP_INCLUDE_STOMP_STOMP_H_
 
 #include <atomic>
-#include <stomp_core/utils.h>
-#include <XmlRpc.h>
-#include "stomp_core/task.h"
+#include <stomp/utils.h>
+#include <stomp/task.h>
 
-namespace stomp_core
+namespace stomp
 {
 
 /** @brief The Stomp class */
@@ -209,4 +208,4 @@ protected:
 
 } /* namespace stomp */
 
-#endif /* INDUSTRIAL_MOVEIT_STOMP_CORE_INCLUDE_STOMP_CORE_STOMP_H_ */
+#endif /* INDUSTRIAL_MOVEIT_STOMP_INCLUDE_STOMP_STOMP_H_ */

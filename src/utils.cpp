@@ -23,12 +23,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#include <stomp_core/utils.h>
+#include <stomp/utils.h>
 #include <cmath>
 #include <iostream>
 #include <Eigen/Dense>
 
-namespace stomp_core
+namespace stomp
 {
 
 

@@ -1,4 +1,4 @@
-name: CI - Ubuntu Bionic
+name: Noetic-Build
 
 on:
   # direct pushes to protected branches are not supported
@@ -11,13 +11,13 @@ on:
 
 jobs:
   industrial_ci:
-    name: ROS Melodic (${{ matrix.ros_repo }})
+    name: Noetic (${{ matrix.ros_repo }})
     runs-on: ubuntu-20.04
 
     strategy:
       fail-fast: false
       matrix:
-        ros_distro: [ melodic ]
+        ros_distro: [ noetic ]
         ros_repo: [ main, testing ]
 
     env:
@@ -44,3 +44,5 @@ jobs:
         env:
           ROS_DISTRO: ${{ matrix.ros_distro }}
           ROS_REPO: ${{ matrix.ros_repo }}
+          TARGET_CMAKE_ARGS: "-DSTOMP_ENABLE_TESTING=ON"
+          AFTER_SCRIPT: 'catkin build -w $target_ws --no-deps --verbose stomp"

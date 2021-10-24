@@ -26,8 +26,8 @@
 #include <iostream>
 #include <Eigen/Dense>
 #include <gtest/gtest.h>
-#include "stomp_core/stomp.h"
-#include "stomp_core/task.h"
+#include <stomp/stomp.h>
+#include <stomp/task.h>
 
 using Trajectory = Eigen::MatrixXd;                              /**< Assign Type Trajectory to Eigen::MatrixXd Type */
 
@@ -40,7 +40,7 @@ const std::vector<double> BIAS_THRESHOLD = {0.050,0.050,0.050};  /**< Threshold 
 const std::vector<double> STD_DEV = {1.0, 1.0, 1.0};             /**< Standard deviation used for generating noisy parameters */
 
 
-using namespace stomp_core;
+using namespace stomp;
 
 /** @brief A dummy task for testing STOMP */
 class DummyTask: public Task
@@ -278,7 +278,7 @@ TEST(Stomp3DOF,solve_default)
 
   std::string line_separator = "\n------------------------------------------------------\n";
   std::cout<<line_separator;
-  std::cout<<stomp_core::toString(trajectory_bias);
+  std::cout<<stomp::toString(trajectory_bias);
   std::cout<<line_separator;
   std::cout<<toString(optimized)<<"\n";
   std::cout<<"Differences"<<"\n"<<toString(diff)<<line_separator;
@@ -308,7 +308,7 @@ TEST(Stomp3DOF,solve_interpolated_initial)
 
   std::string line_separator = "\n------------------------------------------------------\n";
   std::cout<<line_separator;
-  std::cout<<stomp_core::toString(trajectory_bias);
+  std::cout<<stomp::toString(trajectory_bias);
   std::cout<<line_separator;
   std::cout<<toString(optimized)<<"\n";
   std::cout<<"Differences"<<"\n"<<toString(diff)<<line_separator;
@@ -338,7 +338,7 @@ TEST(Stomp3DOF,solve_cubic_polynomial_initial)
 
   std::string line_separator = "\n------------------------------------------------------\n";
   std::cout<<line_separator;
-  std::cout<<stomp_core::toString(trajectory_bias);
+  std::cout<<stomp::toString(trajectory_bias);
   std::cout<<line_separator;
   std::cout<<toString(optimized)<<"\n";
   std::cout<<"Differences"<<"\n"<<toString(diff)<<line_separator;
@@ -368,7 +368,7 @@ TEST(Stomp3DOF,solve_min_control_cost_initial)
 
   std::string line_separator = "\n------------------------------------------------------\n";
   std::cout<<line_separator;
-  std::cout<<stomp_core::toString(trajectory_bias);
+  std::cout<<stomp::toString(trajectory_bias);
   std::cout<<line_separator;
   std::cout<<toString(optimized)<<"\n";
   std::cout<<"Differences"<<"\n"<<toString(diff)<<line_separator;
@@ -401,7 +401,7 @@ TEST(Stomp3DOF,solve_40_timesteps)
 
   std::string line_separator = "\n------------------------------------------------------\n";
   std::cout<<line_separator;
-  std::cout<<stomp_core::toString(trajectory_bias);
+  std::cout<<stomp::toString(trajectory_bias);
   std::cout<<line_separator;
   std::cout<<toString(optimized)<<"\n";
   std::cout<<"Differences"<<"\n"<<toString(diff)<<line_separator;
@@ -434,7 +434,7 @@ TEST(Stomp3DOF,solve_60_timesteps)
 
   std::string line_separator = "\n------------------------------------------------------\n";
   std::cout<<line_separator;
-  std::cout<<stomp_core::toString(trajectory_bias);
+  std::cout<<stomp::toString(trajectory_bias);
   std::cout<<line_separator;
   std::cout<<toString(optimized)<<"\n";
   std::cout<<"Differences"<<"\n"<<toString(diff)<<line_separator;

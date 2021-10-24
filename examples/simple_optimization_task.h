@@ -27,14 +27,14 @@
 #ifndef EXAMPLES_SIMPLE_OPTIMIZATION_TASK_H_
 #define EXAMPLES_SIMPLE_OPTIMIZATION_TASK_H_
 
-#include <stomp_core/task.h>
+#include <stomp/task.h>
 
-namespace stomp_core_examples
+namespace stomp_examples
 {
 
 //! [SimpleOptimizationTask Inherit]
 /** @brief A dummy task for testing STOMP */
-class SimpleOptimizationTask: public stomp_core::Task
+class SimpleOptimizationTask: public stomp::Task
 {
 public:
   /**
@@ -53,7 +53,7 @@ public:
 
     // generate smoothing matrix
     int num_timesteps = parameters_bias.cols();
-    stomp_core::generateSmoothingMatrix(num_timesteps,1.0,smoothing_M_);
+    stomp::generateSmoothingMatrix(num_timesteps,1.0,smoothing_M_);
     srand(time(0));
 
   }

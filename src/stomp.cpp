@@ -24,14 +24,14 @@
  * limitations under the License.
  */
 
-#include <ros/console.h>
+#include <console_bridge/console.h>
 #include <limits.h>
 #include <Eigen/LU>
 #include <Eigen/Cholesky>
 #include <math.h>
-#include <stomp_core/utils.h>
 #include <numeric>
-#include "stomp_core/stomp.h"
+#include <stomp/utils.h>
+#include <stomp/stomp.h>
 
 static const double DEFAULT_NOISY_COST_IMPORTANCE_WEIGHT = 1.0; /**< Default noisy cost importance weight */
 static const double MIN_COST_DIFFERENCE = 1e-8; /**< Minimum cost difference allowed during probability calculation */
@@ -103,11 +103,11 @@ bool computeMinCostTrajectory(const std::vector<double>& first,
                               const Eigen::MatrixXd& inv_control_cost_matrix_R,
                               Eigen::MatrixXd& trajectory_joints)
 {
-  using namespace stomp_core;
+  using namespace stomp;
 
   if(control_cost_matrix_R_padded.rows() != control_cost_matrix_R_padded.cols())
   {
-    ROS_ERROR("Control Cost Matrix is not square");
+    CONSOLE_BRIDGE_logError("Control Cost Matrix is not square");
     return false;
   }
 
@@ -166,7 +166,8 @@ void computeParametersControlCosts(const Eigen::MatrixXd& parameters,
 }
 
 
-namespace stomp_core {
+namespace stomp
+{
 
 
 Stomp::Stomp(const StompConfiguration& config,TaskPtr task):
@@ -195,7 +196,7 @@ bool Stomp::solve(const std::vector<double>& first,const std::vector<double>& la
   // initialize trajectory
   if(!computeInitialTrajectory(first,last))
   {
-    ROS_ERROR("Unable to generate initial trajectory");
+    CONSOLE_BRIDGE_logError("Unable to generate initial trajectory");
   }
 
   return solve(parameters_optimized_,parameters_optimized);
@@ -225,14 +226,14 @@ bool Stomp::solve(const Eigen::MatrixXd& initial_parameters,
   // check initial trajectory size
   if(initial_parameters.rows() != config_.num_dimensions || initial_parameters.cols() != config_.num_timesteps)
   {
-    ROS_ERROR("Initial trajectory dimensions is incorrect");
+    CONSOLE_BRIDGE_logError("Initial trajectory dimensions is incorrect");
     return false;
   }
   else
   {
     if(initial_parameters.cols() != config_.num_timesteps)
     {
-      ROS_ERROR("Initial trajectory number of time steps is incorrect");
+      CONSOLE_BRIDGE_logError("Initial trajectory number of time steps is incorrect");
       return false;
     }
   }
@@ -244,7 +245,7 @@ bool Stomp::solve(const Eigen::MatrixXd& initial_parameters,
   // computing initialial trajectory cost
   if(!computeOptimizedCost())
   {
-    ROS_ERROR("Failed to calculate initial trajectory cost");
+    CONSOLE_BRIDGE_logError("Failed to calculate initial trajectory cost");
     return false;
   }
 
@@ -252,12 +253,12 @@ bool Stomp::solve(const Eigen::MatrixXd& initial_parameters,
   while(current_iteration_ <= config_.num_iterations && runSingleIteration())
   {
 
-    ROS_DEBUG("STOMP completed iteration %i with cost %f",current_iteration_,current_lowest_cost_);
+    CONSOLE_BRIDGE_logDebug("STOMP completed iteration %i with cost %f",current_iteration_,current_lowest_cost_);
 
 
     if(parameters_valid_)
     {
-      ROS_DEBUG("Found valid solution, will iterate %i more time(s) ",
+      CONSOLE_BRIDGE_logDebug("Found valid solution, will iterate %i more time(s) ",
                config_.num_iterations_after_valid - valid_iterations);
 
       valid_iterations++;
@@ -277,15 +278,15 @@ bool Stomp::solve(const Eigen::MatrixXd& initial_parameters,
 
   if(parameters_valid_)
   {
-    ROS_INFO("STOMP found a valid solution with cost %f after %i iterations",
+    CONSOLE_BRIDGE_logInform("STOMP found a valid solution with cost %f after %i iterations",
              current_lowest_cost_,current_iteration_);
   }
   else
   {
     if (proceed_)
-      ROS_ERROR("STOMP failed to find a valid solution after %i iterations",current_iteration_);
+      CONSOLE_BRIDGE_logError("STOMP failed to find a valid solution after %i iterations",current_iteration_);
     else
-      ROS_ERROR_STREAM("Stomp was terminated");
+      CONSOLE_BRIDGE_logError("Stomp was terminated");
   }
 
   parameters_optimized = parameters_optimized_;
@@ -307,7 +308,7 @@ bool Stomp::resetVariables()
   // verifying configuration
   if(config_.max_rollouts <= config_.num_rollouts)
   {
-    ROS_DEBUG_STREAM("'max_rollouts' must be greater than 'num_rollouts_per_iteration'.");
+    CONSOLE_BRIDGE_logDebug("'max_rollouts' must be greater than 'num_rollouts_per_iteration'.");
     config_.max_rollouts = config_.num_rollouts + 1; // one more to accommodate optimized trajectory
   }
 
@@ -415,7 +416,7 @@ bool Stomp::computeInitialTrajectory(const std::vector<double>& first,const std:
 
 bool Stomp::cancel()
 {
-  ROS_WARN("Interrupting STOMP");
+  CONSOLE_BRIDGE_logWarn("Interrupting STOMP");
   proceed_ = false;
   return !proceed_;
 }
@@ -523,7 +524,7 @@ bool Stomp::generateNoisyRollouts()
                                       noisy_rollouts_[r].parameters_noise,
                                       noisy_rollouts_[r].noise))
     {
-      ROS_ERROR("Failed to generate noisy parameters at iteration %i",current_iteration_);
+      CONSOLE_BRIDGE_logError("Failed to generate noisy parameters at iteration %i",current_iteration_);
       return false;
     }
 
@@ -548,7 +549,7 @@ bool Stomp::filterNoisyRollouts()
 
     if(!task_->filterNoisyParameters(0,config_.num_timesteps,current_iteration_,r,noisy_rollouts_[r].parameters_noise,filtered))
     {
-      ROS_ERROR_STREAM("Failed to filter noisy parameters");
+      CONSOLE_BRIDGE_logError("Failed to filter noisy parameters");
       return false;
     }
 
@@ -618,7 +619,7 @@ bool Stomp::computeRolloutsStateCosts()
                             current_iteration_,r,
                             rollout.state_costs,all_valid))
     {
-      ROS_ERROR("Trajectory cost computation failed for rollout %i.",r);
+      CONSOLE_BRIDGE_logError("Trajectory cost computation failed for rollout %i.",r);
       proceed = false;
       break;
     }
@@ -758,7 +759,7 @@ bool Stomp::updateParameters()
   // filtering updates
   if(!task_->filterParameterUpdates(0,config_.num_timesteps,current_iteration_,parameters_optimized_,parameters_updates_))
   {
-    ROS_ERROR("Updates filtering step failed");
+    CONSOLE_BRIDGE_logError("Updates filtering step failed");
     return false;
   }
 

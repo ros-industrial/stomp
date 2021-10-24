@@ -26,7 +26,7 @@
 
 #include <iostream>
 #include <Eigen/Dense>
-#include "stomp_core/stomp.h"
+#include <stomp/stomp.h>
 #include "simple_optimization_task.h"
 
 using Trajectory = Eigen::MatrixXd;                              /**< Assign Type Trajectory to Eigen::MatrixXd Type */
@@ -44,10 +44,10 @@ static const std::vector<double> STD_DEV = {1.0, 1.0, 1.0};             /**< Sta
  * @brief Creates a STOMP configuration object with default parameters.
  * @return A STOMP configuration object
  */
-stomp_core::StompConfiguration create3DOFConfiguration()
+stomp::StompConfiguration create3DOFConfiguration()
 {
   //! [Create Config]
-  using namespace stomp_core;
+  using namespace stomp;
 
   StompConfiguration c;
   c.num_timesteps = NUM_TIMESTEPS;
@@ -113,8 +113,8 @@ void interpolate(const std::vector<double>& start, const std::vector<double>& en
 
 int main(int argc,char** argv)
 {
-  using namespace stomp_core_examples;
-  using namespace stomp_core;
+  using namespace stomp_examples;
+  using namespace stomp;
 
   /**< Creating a Task with a trajectory bias **/
   Trajectory trajectory_bias;

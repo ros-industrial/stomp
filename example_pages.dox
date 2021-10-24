@@ -1,15 +1,15 @@
 /**
-@page stomp_core_examples stomp_core examples
+@page stomp_examples stomp examples
 @tableofcontents
-@section stomp_core_example Optimize with STOMP
+@section stomp_example Optimize with STOMP
 The full example program can be found in file @ref stomp_example_code
 
   @subsection task_implementation Define a Simple Task Implementation
 
-  Create a class that implements the stomp_core::Task as shown below
+  Create a class that implements the stomp::Task as shown below
   @snippet examples/simple_optimization_task.h SimpleOptimizationTask Inherit
 
-  For full details look at stomp_core_examples::SimpleOptimizationTask
+  For full details look at stomp_examples::SimpleOptimizationTask
 
 
   @subsection instantiate_task Instantiate a Task Object
@@ -19,7 +19,7 @@ The full example program can be found in file @ref stomp_example_code
 
   @subsection create_config Create a STOMP config object
 
-  Populate the stomp_core::StompConfiguration object as shown below:
+  Populate the stomp::StompConfiguration object as shown below:
   @snippet examples/stomp_example.cpp Create Config
   
   

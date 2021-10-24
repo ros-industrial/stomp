@@ -1,0 +1,40 @@
+name: Windows-Noetic-Build
+
+on:
+  # direct pushes to protected branches are not supported
+  pull_request:
+  # run every day, at 10am UTC
+  schedule:
+    - cron: '0 10 * * *'
+  # allow manually starting this workflow
+  workflow_dispatch:
+
+jobs:
+  windows_ci:
+    name: Noetic
+    runs-on: windows-latest
+
+    env:
+      ROS_DISTRO: noetic
+      CCACHE_DIR: "${{ github.workspace }}/.ccache"
+
+    steps:
+      - name: Fetch repository
+        uses: actions/checkout@v2
+
+      - name: Build
+        shell: cmd
+        run: |
+          choco sources add -n=roswin -s https://aka.ms/ros/public --priority 1
+          choco install ros-%ROS_DISTRO%-desktop_full -y --no-progress
+
+          call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\Common7\Tools\VsDevCmd.bat" -arch=amd64 -host_arch=amd64
+          call "C:\opt\ros\%ROS_DISTRO%\x64\setup.bat"
+
+          rosdep update
+
+          rosdep install -q --from-paths . --ignore-src -y
+
+          catkin_make_isolated --install --force-cmake --only-pkg-with-deps stomp --cmake-args -DCMAKE_BUILD_TYPE=Release -DINSTALL_OMPL=OFF
+          call "D:\a\tesseract\tesseract\install_isolated\setup.bat"
+          catkin_make_isolated --install --force-cmake --pkg stomp --cmake-args -DCMAKE_BUILD_TYPE=Release -DSTOMP_ENABLE_TESTING=ON
