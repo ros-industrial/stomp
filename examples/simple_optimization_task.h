@@ -31,10 +31,9 @@
 
 namespace stomp_examples
 {
-
 //! [SimpleOptimizationTask Inherit]
 /** @brief A dummy task for testing STOMP */
-class SimpleOptimizationTask: public stomp::Task
+class SimpleOptimizationTask : public stomp::Task
 {
 public:
   /**
@@ -44,21 +43,17 @@ public:
    * @param std_dev standard deviation used for generating noisy parameters
    */
   SimpleOptimizationTask(const Eigen::MatrixXd& parameters_bias,
-            const std::vector<double>& bias_thresholds,
-            const std::vector<double>& std_dev):
-              parameters_bias_(parameters_bias),
-              bias_thresholds_(bias_thresholds),
-              std_dev_(std_dev)
+                         const std::vector<double>& bias_thresholds,
+                         const std::vector<double>& std_dev)
+    : parameters_bias_(parameters_bias), bias_thresholds_(bias_thresholds), std_dev_(std_dev)
   {
-
     // generate smoothing matrix
     int num_timesteps = parameters_bias.cols();
-    stomp::generateSmoothingMatrix(num_timesteps,1.0,smoothing_M_);
+    stomp::generateSmoothingMatrix(num_timesteps, 1.0, smoothing_M_);
     srand(time(0));
-
   }
 
-//! [SimpleOptimizationTask Inherit]
+  //! [SimpleOptimizationTask Inherit]
   /**
    * @brief Generates a noisy trajectory from the parameters.
    * @param parameters        A matrix [num_dimensions][num_parameters] of the current optimized parameters
@@ -79,13 +74,13 @@ public:
                                Eigen::MatrixXd& noise) override
   {
     double rand_noise;
-    for(std::size_t d = 0; d < parameters.rows(); d++)
+    for (std::size_t d = 0; d < parameters.rows(); d++)
     {
-      for(std::size_t t = 0; t < parameters.cols(); t++)
+      for (std::size_t t = 0; t < parameters.cols(); t++)
       {
-        rand_noise = static_cast<double>(rand()%RAND_MAX)/static_cast<double>(RAND_MAX - 1); // 0 to 1
-        rand_noise = 2*(0.5 - rand_noise);
-        noise(d,t) =  rand_noise*std_dev_[d];
+        rand_noise = static_cast<double>(rand() % RAND_MAX) / static_cast<double>(RAND_MAX - 1);  // 0 to 1
+        rand_noise = 2 * (0.5 - rand_noise);
+        noise(d, t) = rand_noise * std_dev_[d];
       }
     }
 
@@ -111,7 +106,7 @@ public:
                     Eigen::VectorXd& costs,
                     bool& validity) override
   {
-    return computeNoisyCosts(parameters,start_timestep,num_timesteps,iteration_number,-1,costs,validity);
+    return computeNoisyCosts(parameters, start_timestep, num_timesteps, iteration_number, -1, costs, validity);
   }
 
   /**
@@ -138,14 +133,13 @@ public:
     double cost = 0.0;
     validity = true;
 
-    for(std::size_t t = 0u; t < num_timesteps; t++)
+    for (std::size_t t = 0u; t < num_timesteps; t++)
     {
       cost = 0;
-      for(std::size_t d = 0u; d < parameters.rows() ; d++)
+      for (std::size_t d = 0u; d < parameters.rows(); d++)
       {
-
-        diff = std::abs(parameters(d,t) - parameters_bias_(d,t));
-        if( diff > std::abs(bias_thresholds_[d]))
+        diff = std::abs(parameters(d, t) - parameters_bias_(d, t));
+        if (diff > std::abs(bias_thresholds_[d]))
         {
           cost += diff;
           validity = false;
@@ -159,8 +153,8 @@ public:
   }
 
   /**
-   * @brief Filters the given parameters which is applied after the update. It could be used for clipping of joint limits
-   * or projecting into the null space of the Jacobian.
+   * @brief Filters the given parameters which is applied after the update. It could be used for clipping of joint
+   * limits or projecting into the null space of the Jacobian.
    *
    * @param start_timestep    The start index into the 'parameters' array, usually 0.
    * @param num_timesteps     The number of elements to use from 'parameters' starting from 'start_timestep'
@@ -175,12 +169,10 @@ public:
                               const Eigen::MatrixXd& parameters,
                               Eigen::MatrixXd& updates) override
   {
-    return smoothParameterUpdates(start_timestep,num_timesteps,iteration_number,updates);
+    return smoothParameterUpdates(start_timestep, num_timesteps, iteration_number, updates);
   }
 
-
 protected:
-
   /**
    * @brief Perform a smooth update given a noisy update
    * @param start_timestep starting timestep
@@ -194,24 +186,21 @@ protected:
                               int iteration_number,
                               Eigen::MatrixXd& updates)
   {
-
-    for(auto d = 0u; d < updates.rows(); d++)
+    for (auto d = 0u; d < updates.rows(); d++)
     {
-      updates.row(d).transpose() = smoothing_M_*(updates.row(d).transpose());
+      updates.row(d).transpose() = smoothing_M_ * (updates.row(d).transpose());
     }
 
     return true;
   }
 
 protected:
-
-  Eigen::MatrixXd parameters_bias_;          /**< Parameter bias used for computing cost for the test */
+  Eigen::MatrixXd parameters_bias_;     /**< Parameter bias used for computing cost for the test */
   std::vector<double> bias_thresholds_; /**< Threshold to determine whether two trajectories are equal */
   std::vector<double> std_dev_;         /**< Standard deviation used for generating noisy parameters */
   Eigen::MatrixXd smoothing_M_;         /**< Matrix used for smoothing the trajectory */
 };
 
-}
-
+}  // namespace stomp_examples
 
 #endif /* EXAMPLES_SIMPLE_OPTIMIZATION_TASK_H_ */
