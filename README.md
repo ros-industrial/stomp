@@ -1,7 +1,16 @@
 # stomp_ros
 
-[![Build Status: Ubuntu Bionic (Actions)](https://github.com/ros-industrial/stomp/workflows/CI%20-%20Ubuntu%20Bionic/badge.svg?branch=main)](https://github.com/ros-industrial/stomp/actions?query=workflow%3A%22CI+-+Ubuntu+Bionic%22)
-[![Build Status: Ubuntu Focal (Actions)](https://github.com/ros-industrial/stomp/workflows/CI%20-%20Ubuntu%20Focal/badge.svg?branch=main)](https://github.com/ros-industrial/stomp/actions?query=workflow%3A%22CI+-+Ubuntu+Focal%22)
+[![license - apache 2.0](https://img.shields.io/:license-Apache%202.0-yellowgreen.svg)](https://opensource.org/licenses/Apache-2.0)
+
+## Build Status
+
+Platform             | CI Status
+---------------------|:---------
+Linux (Focal)        |[![Build Status](https://github.com/ros-industrial/stomp/actions/workflows/focal_build.yml/badge.svg?branch=main)](https://github.com/ros-industrial/stomp/actions/workflows/focal_build.yml)
+Linux (Bionic)       |[![Build Status](https://github.com/ros-industrial/stomp/actions/workflows/bionic_build.yml/badge.svg?branch=main)](https://github.com/ros-industrial/stomp/actions/workflows/bionic_build.yml)
+Windows              |[![Build Status](https://github.com/ros-industrial/stomp/actions/workflows/windows_noetic_build.yml/badge.svg?branch=main)](https://github.com/ros-industrial/stomp/actions/workflows/windows_noetic_build.yml)
+Lint  (Clang-Format) |[![Build Status](https://github.com/ros-industrial/stomp/actions/workflows/clang_format.yml/badge.svg?branch=main)](https://github.com/ros-industrial/stomp/actions/workflows/clang_format.yml)
+Lint  (CMake-Format) |[![Build Status](https://github.com/ros-industrial/stomp/actions/workflows/cmake_format.yml/badge.svg?branch=main)](https://github.com/ros-industrial/stomp/actions/workflows/cmake_format.yml)
 
 #### Build
 - Build the workspace:
@@ -10,37 +19,14 @@
 catkin build
 ```
 
-#### Unit Test
+#### Build Unit Test
 Cd into the catkin workspace directory and type the following command:
 ```
-catkin run_tests 
-```
-- Run the stomp unit tests:
-```
-catkin run_tests stomp
+catkin build --cmake-args -DSTOMP_ENABLE_TESTING=ON 
 ```
 
-#### Seeding Stomp
-The STOMP planner works through optimization: it starts with a given trajectory, called the ***seed***, and iteratively attempts to improve it. This seed is set:
- 1. By default, it is set to the joint interpolated path between the start and end joint configurations.
- 2. If you wish, you can set your own seed trajectory.
-
-The `StompPlanner` class works off of the `moveit_msgs/MotionPlanRequest` message type which does not provide an interface for seeds. Until that is added, we bastardize the unused `MotionPlanRequest::trajectory_constraints` field to serve this purpose. Use the `StompPlanner::encodeSeedTrajectory(const trajectory_msgs::JointTrajectory& seed)` static function to do this:
-
-```c++
-
-StompPlanner planner = makeStompPlanner(); // However you initialize
-planning_interface::MotionPlanRequest request;
-
-// set your nominal goals, start conditions, etc...
-
-trajectory_msgs::JointTrajectory seed_traj; // Look up your seed traj
-request.trajectory_constraints = StompPlanner::encodeSeedTrajectory(seed_traj);
-
-// Call the planning service or the planner itself
-planner.setMotionPlanRequest(request)
-
-MotionPlanResponse res;
-planner.solve(res);
-``` 
-There is no current way to set this through the MoveGroupInterface class. 
+#### Run Unit Test
+Cd into the catkin workspace stomp build directory and type the following command:
+```
+ctest
+```

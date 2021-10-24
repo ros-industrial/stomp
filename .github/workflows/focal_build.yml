@@ -1,6 +1,9 @@
 name: Noetic-Build
 
 on:
+  push:
+    branches:
+      - main
   # direct pushes to protected branches are not supported
   pull_request:
   # run every day, at 10am UTC
@@ -44,5 +47,6 @@ jobs:
         env:
           ROS_DISTRO: ${{ matrix.ros_distro }}
           ROS_REPO: ${{ matrix.ros_repo }}
+          UPSTREAM_WORKSPACE: 'dependencies.rosinstall'
           TARGET_CMAKE_ARGS: "-DSTOMP_ENABLE_TESTING=ON"
-          AFTER_SCRIPT: 'catkin build -w $target_ws --no-deps --verbose stomp"
+          AFTER_SCRIPT: 'catkin build -w $target_ws --no-deps --verbose stomp'

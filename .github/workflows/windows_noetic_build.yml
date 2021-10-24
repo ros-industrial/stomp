@@ -1,6 +1,9 @@
 name: Windows-Noetic-Build
 
 on:
+  push:
+    branches:
+      - main
   # direct pushes to protected branches are not supported
   pull_request:
   # run every day, at 10am UTC
@@ -21,6 +24,8 @@ jobs:
     steps:
       - name: Fetch repository
         uses: actions/checkout@v2
+        with:
+          path: src/stomp
 
       - name: Build
         shell: cmd
@@ -33,8 +38,10 @@ jobs:
 
           rosdep update
 
+          vcs import --input "${{ github.workspace }}/src/stomp/dependencies.rosinstall" src/
+
           rosdep install -q --from-paths . --ignore-src -y
 
-          catkin_make_isolated --install --force-cmake --only-pkg-with-deps stomp --cmake-args -DCMAKE_BUILD_TYPE=Release -DINSTALL_OMPL=OFF
-          call "D:\a\tesseract\tesseract\install_isolated\setup.bat"
+          catkin_make_isolated --install --force-cmake --only-pkg-with-deps stomp --cmake-args -DCMAKE_BUILD_TYPE=Release
+          call "${{ github.workspace }}\install_isolated\setup.bat"
           catkin_make_isolated --install --force-cmake --pkg stomp --cmake-args -DCMAKE_BUILD_TYPE=Release -DSTOMP_ENABLE_TESTING=ON
