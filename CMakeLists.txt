@@ -8,15 +8,9 @@ project(${pkg_extracted_name} VERSION ${pkg_extracted_version} LANGUAGES CXX)
 find_package(Eigen3 REQUIRED)
 find_package(console_bridge REQUIRED)
 
-## Declare a C++ library
-add_library(${PROJECT_NAME}
-   src/stomp.cpp
-   src/utils.cpp
-)
-target_link_libraries(${PROJECT_NAME}
-  Eigen3::Eigen
-  console_bridge::console_bridge
-  )
+# Declare a C++ library
+add_library(${PROJECT_NAME} src/stomp.cpp src/utils.cpp)
+target_link_libraries(${PROJECT_NAME} Eigen3::Eigen console_bridge::console_bridge)
 target_cxx_version(${PROJECT_NAME} PUBLIC VERSION 11)
 target_include_directories(${PROJECT_NAME} PUBLIC "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>"
                                                   "$<INSTALL_INTERFACE:include>")
@@ -29,7 +23,7 @@ target_include_directories(${PROJECT_NAME} PUBLIC "$<BUILD_INTERFACE:${CMAKE_CUR
 
 configure_package(NAMESPACE stomp TARGETS ${PROJECT_NAME} ${PROJECT_NAME}_example)
 
-## Mark cpp header files for installation
+# Mark cpp header files for installation
 install(
   DIRECTORY include/${PROJECT_NAME}
   DESTINATION include
