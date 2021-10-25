@@ -30,8 +30,8 @@ target_include_directories(${PROJECT_NAME} PUBLIC "$<BUILD_INTERFACE:${CMAKE_CUR
 add_executable(${PROJECT_NAME}_example examples/stomp_example.cpp)
 target_link_libraries(${PROJECT_NAME}_example ${PROJECT_NAME})
 target_cxx_version(${PROJECT_NAME}_example PUBLIC VERSION 11)
-target_include_directories(${PROJECT_NAME} PUBLIC "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/examples>"
-                                                  "$<INSTALL_INTERFACE:examples>")
+target_include_directories(${PROJECT_NAME}_example PUBLIC "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/examples>"
+                                                          "$<INSTALL_INTERFACE:examples>")
 
 configure_package(NAMESPACE stomp TARGETS ${PROJECT_NAME} ${PROJECT_NAME}_example)
 
