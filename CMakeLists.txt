@@ -5,6 +5,14 @@ find_package(ros_industrial_cmake_boilerplate REQUIRED)
 extract_package_metadata(pkg)
 project(${pkg_extracted_name} VERSION ${pkg_extracted_version} LANGUAGES CXX)
 
+if(NOT DEFINED BUILD_SHARED_LIBS)
+  set(BUILD_SHARED_LIBS ON)
+endif()
+
+if(NOT DEFINED STOMP_ENABLE_TESTING)
+  set(STOMP_ENABLE_TESTING OFF)
+endif()
+
 find_package(Eigen3 REQUIRED)
 find_package(console_bridge REQUIRED)
 if(NOT TARGET console_bridge::console_bridge)
