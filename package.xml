@@ -2,7 +2,7 @@
 <?xml-model href="http://download.ros.org/schema/package_format2.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
 <package format="2">
   <name>stomp</name>
-  <version>0.1.1</version>
+  <version>0.1.2</version>
   <description>This package  provides the STOMP (Stochastic Trajectory Optimization for Motion Planning) algorithm that can be used for robot motion planning tasks or other similar optimization tasks</description>
   <author>Jorge Nicho</author>
   <maintainer email="jrgnichodevel@gmail.com">Jorge Nicho</maintainer>
