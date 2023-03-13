@@ -229,7 +229,7 @@ bool Stomp::solve(const Eigen::MatrixXd& initial_parameters, Eigen::MatrixXd& pa
     }
   }
 
-  current_iteration_ = 1;
+  current_iteration_ = 0;
   unsigned int valid_iterations = 0;
   current_lowest_cost_ = std::numeric_limits<double>::max();
   max_control_cost_coeff_ = std::numeric_limits<double>::infinity();
@@ -242,8 +242,8 @@ bool Stomp::solve(const Eigen::MatrixXd& initial_parameters, Eigen::MatrixXd& pa
   }
 
   parameters_valid_prev_ = parameters_valid_;
-  while (current_iteration_ <= config_.num_iterations && runSingleIteration())
-  {
+
+  do {
     CONSOLE_BRIDGE_logDebug("STOMP completed iteration %i with cost %f", current_iteration_, current_lowest_cost_);
 
     if (parameters_valid_)
@@ -263,8 +263,7 @@ bool Stomp::solve(const Eigen::MatrixXd& initial_parameters, Eigen::MatrixXd& pa
       break;
     }
 
-    current_iteration_++;
-  }
+  } while (current_iteration_++ <= config_.num_iterations && runSingleIteration());
 
   if (parameters_valid_)
   {
