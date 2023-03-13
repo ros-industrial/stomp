@@ -153,6 +153,7 @@ void computeParametersControlCosts(const Eigen::MatrixXd& parameters,
                                    double dt,
                                    double control_cost_weight,
                                    const Eigen::MatrixXd& control_cost_matrix_R,
+                                   double &max_coeff,
                                    Eigen::MatrixXd& control_costs)
 {
   std::size_t num_timesteps = parameters.cols();
@@ -163,7 +164,8 @@ void computeParametersControlCosts(const Eigen::MatrixXd& parameters,
     control_costs.row(d).setConstant(0.5 * (1 / dt) * cost);
   }
 
-  double max_coeff = control_costs.maxCoeff();
+  if (!std::isfinite(max_coeff))
+    max_coeff = control_costs.maxCoeff();
   control_costs /= (max_coeff > 1e-8) ? max_coeff : 1;
   control_costs *= control_cost_weight;
 }
@@ -230,6 +232,7 @@ bool Stomp::solve(const Eigen::MatrixXd& initial_parameters, Eigen::MatrixXd& pa
   current_iteration_ = 1;
   unsigned int valid_iterations = 0;
   current_lowest_cost_ = std::numeric_limits<double>::max();
+  max_control_cost_coeff_ = std::numeric_limits<double>::infinity();
 
   // computing initialial trajectory cost
   if (!computeOptimizedCost())
@@ -630,6 +633,7 @@ bool Stomp::computeRolloutsControlCosts()
                                     config_.delta_t,
                                     config_.control_cost_weight,
                                     control_cost_matrix_R_,
+                                    max_control_cost_coeff_,
                                     rollout.control_costs);
     }
   }
@@ -757,6 +761,7 @@ bool Stomp::computeOptimizedCost()
                                   config_.delta_t,
                                   config_.control_cost_weight,
                                   control_cost_matrix_R_,
+                                  max_control_cost_coeff_,
                                   parameters_control_costs_);
 
     // adding all costs
