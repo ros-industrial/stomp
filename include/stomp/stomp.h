@@ -178,7 +178,7 @@ protected:
                                 */
   double parameters_total_cost_;         /**< @brief Total cost of the optimized parameters */
   double current_lowest_cost_;           /**< @brief Hold the lowest cost of the optimized parameters */
-  double max_control_cost_coeff_;
+  double max_control_cost_coeff_;        /**< @brief A value used for scaling control costs */
   Eigen::MatrixXd parameters_optimized_; /**< @brief A matrix [dimensions][timesteps] of the optimized parameters. */
 
   Eigen::MatrixXd parameters_updates_;       /**< @brief A matrix [dimensions][timesteps] of the parameter updates*/
