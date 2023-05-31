@@ -1,126 +1,47 @@
-
-# To use:
-#
-#     pre-commit run -a
-#
-# Or:
-#
-#     pre-commit install  # (runs every time you commit in git)
-#
-# To update this file:
-#
-#     pre-commit autoupdate
-#
-# See https://github.com/pre-commit/pre-commit
+#---
+# This file configures https://pre-commit.com/
+# Based on pre-commit hooks in
+#   https://github.com/pre-commit/pre-commit-hooks
+#   https://github.com/jumanjihouse/pre-commit-hooks
+# to use specific hooks and options.
+fail_fast: true
 
 repos:
-  # Standard hooks
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v4.4.0
+    rev: 1f6de3d70391131fac4b911ae913c568e571e34e
     hooks:
-      - id: check-added-large-files
-      - id: check-ast
-      - id: check-case-conflict
+      - id: trailing-whitespace
+        exclude: \.output
+      - id: end-of-file-fixer
+        exclude: \.(cp?p?$|output)
       - id: check-docstring-first
-      - id: check-merge-conflict
-      - id: check-symlinks
-      - id: check-xml
+      - id: check-added-large-files
       - id: check-yaml
       - id: debug-statements
-      - id: end-of-file-fixer
-      - id: mixed-line-ending
-      - id: trailing-whitespace
-        exclude_types: [rst]
-      - id: fix-byte-order-marker
-
-
-  # Python hooks
+      - id: requirements-txt-fixer
+  - repo: https://github.com/asottile/reorder_python_imports
+    rev: bc7b5b2f0fde191c9d0121588ef9bbb79f8e5e21
+    hooks:
+      - id: reorder-python-imports
+        language_version: python3
+  - repo: https://github.com/pre-commit/pre-commit
+    rev: v2.16.0
+    hooks:
+    -   id: validate_manifest
   - repo: https://github.com/asottile/pyupgrade
-    rev: v3.4.0
+    rev: v1.16.1
     hooks:
-    -   id: pyupgrade
-        args: [--py36-plus]
-
-  # PyDocStyle
-  - repo: https://github.com/PyCQA/pydocstyle
-    rev: 6.3.0
-    hooks:
-    - id: pydocstyle
-      args: ["--ignore=D100,D101,D102,D103,D104,D105,D106,D107,D203,D212,D404"]
-
-  - repo: https://github.com/psf/black
-    rev: 23.3.0
+      - id: pyupgrade
+  - repo: https://github.com/ambv/black
+    rev: cea13f498418784e22f8fbd78db3f9240a2bad11
     hooks:
       - id: black
-        args: ["--line-length=99"]
-
-  - repo: https://github.com/pycqa/flake8
-    rev: 6.0.0
-    hooks:
-    - id: flake8
-      args: ["--extend-ignore=E501"]
-
-  # CPP hooks
-  - repo: https://github.com/pre-commit/mirrors-clang-format
-    rev: v14.0.6
-    hooks:
-      - id: clang-format
-
+        args: ["-l", "120"]
   - repo: local
     hooks:
-      - id: ament_cppcheck
-        name: ament_cppcheck
-        description: Static code analysis of C/C++ files.
-        stages: [commit]
-        entry: ament_cppcheck
+      - id: tests
+        name: tests
+        entry: bash -c "pip install . && pytest -v -xxx"
+        description: Tests expected output of all scripts
         language: system
-        files: \.(h\+\+|h|hh|hxx|hpp|cuh|c|cc|cpp|cu|c\+\+|cxx|tpp|txx)$
-
-  # Maybe use https://github.com/cpplint/cpplint instead
-  - repo: local
-    hooks:
-      - id: ament_cpplint
-        name: ament_cpplint
-        description: Static code analysis of C/C++ files.
-        stages: [commit]
-        entry: ament_cpplint
-        language: system
-        files: \.(h\+\+|h|hh|hxx|hpp|cuh|c|cc|cpp|cu|c\+\+|cxx|tpp|txx)$
-        args: ["--linelength=100", "--filter=-whitespace/newline"]
-
-  # Cmake hooks
-  - repo: local
-    hooks:
-      - id: ament_lint_cmake
-        name: ament_lint_cmake
-        description: Check format of CMakeLists.txt files.
-        stages: [commit]
-        entry: ament_lint_cmake
-        language: system
-        files: CMakeLists\.txt$
-
-  # Copyright
-  - repo: local
-    hooks:
-      - id: ament_copyright
-        name: ament_copyright
-        description: Check if copyright notice is available in all files.
-        stages: [commit]
-        entry: ament_copyright
-        language: system
-
-  # Docs - RestructuredText hooks
-  - repo: https://github.com/PyCQA/doc8
-    rev: v1.1.1
-    hooks:
-      - id: doc8
-        args: ['--max-line-length=100', '--ignore=D001']
-        exclude: CHANGELOG\.rst$
-
-  - repo: https://github.com/pre-commit/pygrep-hooks
-    rev: v1.10.0
-    hooks:
-      - id: rst-backticks
-        exclude: CHANGELOG\.rst$
-      - id: rst-directive-colons
-      - id: rst-inline-touching-normal
+        types: [python]
