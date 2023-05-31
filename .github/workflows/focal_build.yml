@@ -1,4 +1,4 @@
-name: Noetic-Build
+name: Focal-Build
 
 on:
   push:
