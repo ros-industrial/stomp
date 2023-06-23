@@ -1,4 +1,4 @@
-name: Windows-Noetic-Build
+name: Windows-foxy-Build
 
 on:
   push:
@@ -14,27 +14,29 @@ on:
 
 jobs:
   windows_ci:
-    name: Noetic
+    name: Foxy
     runs-on: windows-latest
 
     env:
-      ROS_DISTRO: noetic
+      ROS_DISTRO: foxy
       CCACHE_DIR: "${{ github.workspace }}/.ccache"
 
     steps:
       - name: Fetch repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           path: src/stomp
 
       - name: Build
         shell: cmd
         run: |
-          choco sources add -n=roswin -s https://aka.ms/ros/public --priority 1
-          choco install ros-%ROS_DISTRO%-desktop_full -y --no-progress
+        
+          mkdir c:\opt\chocolatey
+          set ChocolateyInstall=c:\opt\chocolatey
+          choco source add -n=ros-win -s="https://aka.ms/ros/public" --priority=1
+          choco upgrade ros-%ROS_DISTRO%-desktop -y --execution-timeout=0 --pre
 
-          call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\Common7\Tools\VsDevCmd.bat" -arch=amd64 -host_arch=amd64
-          call "C:\opt\ros\%ROS_DISTRO%\x64\setup.bat"
+          c:\opt\ros\%ROS_DISTRO%\x64\setup.bat
 
           rosdep update
 
