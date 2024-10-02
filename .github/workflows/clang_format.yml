@@ -18,12 +18,12 @@ jobs:
       CI_NAME: Clang-Format
       OS_NAME: ubuntu
       OS_CODE_NAME: bionic
-      ROS_DISTRO: melodic
+      ROS_DISTRO: noetic
       ROS_REPO: main
       CLANG_FORMAT_CHECK: file
       CLANG_FORMAT_VERSION: 8
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v2
 
       - name: Free Disk Space
         run: |
@@ -41,7 +41,7 @@ jobs:
           message("::set-output name=timestamp::${current_date}")
 
       - name: ccache cache files
-        uses: actions/cache@v1.1.0
+        uses: actions/cache@v1.2.0
         with:
           path: ${{ env.CI_NAME }}/.ccache
           key: ${{ env.CI_NAME }}-ccache-${{ steps.ccache_cache_timestamp.outputs.timestamp }}
